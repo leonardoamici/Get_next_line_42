@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lamici <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: lamici <lamici@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 09:32:40 by lamici            #+#    #+#             */
-/*   Updated: 2022/10/26 16:53:51 by lamici           ###   ########.fr       */
+/*   Updated: 2024/01/23 16:24:06 by lamici           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "get_next_line_bonus.h"
+
 
 static char	*get_line(char *temp, char *buf)
 {
@@ -80,6 +80,8 @@ static char	*ft_leftover(char *temp)
 	y = 0;
 	while (temp[i] != '\n' && temp[i] != '\0')
 		i++;
+	if (temp[i] == '\n')
+		i++;
 	if (!temp[i])
 	{
 		free(temp);
@@ -101,7 +103,20 @@ char	*get_next_line(int fd)
 {
 	static char	*temp[4096];
 	char		*ret;
+	int 		i;
 
+	i = 0;
+	if (fd == -42)
+	{
+		i = 0;
+		while (i < FOPEN_MAX)
+		{
+			if (temp[i])
+				free(temp[i]);
+			i++;
+		}
+		return (NULL);
+	}
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
 	temp[fd] = get_first_line(fd, temp[fd]);
